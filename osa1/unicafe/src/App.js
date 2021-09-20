@@ -51,6 +51,22 @@ const App = () => {
     setTotal( [ ...total, -1 ] );
   };
 
+  const Statistics = props => {
+    return (
+        <>
+          <h2>Statistics</h2>
+
+          { props.total.length > 0 ? <><p>Good: { good }</p>
+                <p>Neutral: { props.neutral }</p>
+                <p>Bad: { props.bad }</p>
+                <p>All: { props.total.length }</p>
+                <p>Average: { average( props.total ) }</p>
+                <p>Positive: { ( ( props.good / props.total.length ) * 100 ) } %</p></> :
+              <p>No feedback given</p> }
+        </>
+    );
+  };
+
   const average = ( array ) => array.reduce( ( a, b ) => a + b ) / array.length;
 
   return (
@@ -60,16 +76,11 @@ const App = () => {
         <FeedbackButton text="Neutral"
                         handleClick={ () => handleNeutralClick() }/>
         <FeedbackButton text="Bad" handleClick={ () => handleBadClick() }/>
-        <h2>Statistics</h2>
 
-        { total.length > 0 ? <><p>Good: { good }</p>
-              <p>Neutral: { neutral }</p>
-              <p>Bad: { bad }</p>
-              <p>All: { total.length }</p>
-              <p>Average: { average( total ) }</p>
-              <p>Positive: { ( ( good / total.length ) * 100 ) } %</p></> :
-            <p>No feedback given</p> }
+        <Statistics total={total} good={good} neutral={neutral} bad={bad} average={average} />
+
       </div>
+
   );
 };
 
