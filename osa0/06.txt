@@ -1,0 +1,16 @@
+note over Selain:
+Tapahtumakäsittelijä luo uuden muistiinpanon ja
+lisää sen muistiinpanojen listalle ja
+piirtää muistiinpanojen listan uudelleen ja
+lähettää uuden muistiinpanon palvelimelle json muodossa-
+js-tiedoston koodi (tapahtumakäsittelijä) vastaa tietojen lähettämisestä joka
+myöskin estää lomakkeen lähetyksen oletusarvoisen toiminnan e.preventDefault() metodilla
+
+Uuden muistiinpanon sisältö: (json) "content" sekä "date"
+end note
+
+Selain->Palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+Palvelin-->Selain: STATUS 201 Created - Json > {"message":"note created"}
+note over Selain:
+Selain pysyy samalla sivulla ja muita HTTP-pyyntöjä ei suoriteta
+end note
