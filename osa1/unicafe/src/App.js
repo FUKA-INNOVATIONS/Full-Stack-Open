@@ -1,38 +1,34 @@
 import React, { useState } from 'react';
 
-const Good = props => {
+// Average calculator
+const average = ( array ) => array.reduce( ( a, b ) => a + b ) / array.length;
 
+const Button = ( { handleClick, text } ) => <button onClick={ handleClick }>{ text }</button>;
+
+const StatisticLine = props => <p>{ props.text }: { props.value } { props.children }</p>;
+
+const Statistics = ( { good, neutral, bad, total } ) => {
+  return (
+      <>
+        <h3>Statistics</h3>
+
+        { total.length > 0 ?
+            <>
+              <StatisticLine text={ 'Good' } value={ good }/>
+              <StatisticLine text={ 'Neutral' } value={ neutral }/>
+              <StatisticLine text={ 'Bad' } value={ bad }/>
+              <StatisticLine text={ 'All' } value={ total.length }/>
+              <StatisticLine text={ 'Average' }
+                             value={ average( total ) }/>
+              <StatisticLine text={ 'Positive' }
+                             value={ ( good / total.length ) * 100 }>%</StatisticLine>
+            </> :
+            <p>No feedback given</p> }
+      </>
+  );
 };
-
-const Neutral = props => {
-
-};
-
-const Bad = props => {
-
-};
-
-/* const handleClick = ( type, state, setState ) => {
- switch ( type ) {
- case 'good':
- setState( state + 1 );
- break;
- case 'neutral':
- setState( state + 1 );
- break;
- case 'bad':
- setState( state - 1 );
- break;
- default:
- return state;
- }
- }; */
-
-const FeedbackButton = ( { handleClick, text } ) => <button
-    onClick={ handleClick }>{ text }</button>;
 
 const App = () => {
-  // tallenna napit omaan tilaansa
   const [ good, setGood ] = useState( 0 );
   const [ neutral, setNeutral ] = useState( 0 );
   const [ bad, setBad ] = useState( 0 );
@@ -51,33 +47,20 @@ const App = () => {
     setTotal( [ ...total, -1 ] );
   };
 
-  const Statistics = props => {
-    return (
-        <>
-          <h2>Statistics</h2>
+  const handleVoteClick = (oldState, newState, value ) => {
 
-          { props.total.length > 0 ? <><p>Good: { good }</p>
-                <p>Neutral: { props.neutral }</p>
-                <p>Bad: { props.bad }</p>
-                <p>All: { props.total.length }</p>
-                <p>Average: { average( props.total ) }</p>
-                <p>Positive: { ( ( props.good / props.total.length ) * 100 ) } %</p></> :
-              <p>No feedback given</p> }
-        </>
-    );
-  };
-
-  const average = ( array ) => array.reduce( ( a, b ) => a + b ) / array.length;
+  }
 
   return (
-      <div>
+      <div className={ 'main' }>
         <h2>Give feedback</h2>
-        <FeedbackButton text="Good" handleClick={ () => handleGoodClick() }/>
-        <FeedbackButton text="Neutral"
-                        handleClick={ () => handleNeutralClick() }/>
-        <FeedbackButton text="Bad" handleClick={ () => handleBadClick() }/>
 
-        <Statistics total={total} good={good} neutral={neutral} bad={bad} average={average} />
+        <Button text="Good" handleClick={ () => handleGoodClick() }/>
+        <Button text="Neutral" handleClick={ () => handleNeutralClick() }/>
+        <Button text="Bad" handleClick={ () => handleBadClick() }/>
+
+        <Statistics total={ total } good={ good } neutral={ neutral }
+                    bad={ bad } average={ average }/>
 
       </div>
 
