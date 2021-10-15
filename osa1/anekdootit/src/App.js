@@ -3,6 +3,16 @@ import React, { useState } from 'react';
 const Button = ( { handleClick, text } ) => <button
     onClick={ handleClick }>{ text }</button>;
 
+const Anecdote = ( { header, title, votesCount } ) => {
+  return (
+      <>
+        <h3>{ header }</h3>
+        <p>{ title }</p>
+        <p>has { votesCount } votes</p>
+      </>
+  );
+};
+
 const App = () => {
 
   // Generate random number limited by array length
@@ -29,13 +39,19 @@ const App = () => {
     setVotes( copy );
   };
 
+  // Get index of element with max votes
+  const maxVotesIndex = votes.indexOf( Math.max.apply( null, votes ) );
+  //console.log(Math.max.apply( null, votes))
+
   return (
       <div>
-        <p>{ anecdotes[ selected ] }</p>
-        <p>has { votes[ selected ] } votes</p>
+        <Anecdote header={'Anacdote of the day'} title={anecdotes[ selected ]} votesCount={votes[ selected ]} />
         <Button text={ 'vote' } handleClick={ voteHandler }/>
         <Button text={ 'next anecdote' }
                 handleClick={ () => setSelected( randomGenerator ) }/>
+
+        <Anecdote header={'Anecdote with most votes'} title={anecdotes[maxVotesIndex]} votesCount={votes[maxVotesIndex]} />
+        {/*Math.max.apply(null, votes) === 0 ? <h3>No votes yet!</h3> : <Anecdote header={'Anecdote with most votes'} title={anecdotes[maxVotesIndex]} votesCount={votes[maxVotesIndex]} />*/}
 
       </div>
   );
