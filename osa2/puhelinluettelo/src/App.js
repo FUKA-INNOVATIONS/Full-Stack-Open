@@ -15,10 +15,24 @@ const App = () => {
   // Add new person to the list
   const handleAddName = ( e ) => {
     e.preventDefault();
-    const newPerson = {
-      name: newName,
-    };
-    setPersons( persons.concat(newPerson) );
+
+    let personExists = false;
+
+    // Alert incase name already exists
+    persons.forEach(person => {
+      if(person.name.toLowerCase() === newName.toLocaleLowerCase()){
+        personExists = true;
+        alert(`${newName} is already added to  phonebook`)
+      }
+    })
+
+    // Add new person to phonebook
+    if (!personExists) {
+      const newPerson = {
+        name: newName,
+      };
+      setPersons( persons.concat(newPerson) );
+    }
   };
 
   return (
