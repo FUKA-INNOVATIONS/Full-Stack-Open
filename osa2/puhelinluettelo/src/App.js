@@ -1,24 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 
+import axios from 'axios';
+
 const App = () => {
 
-  const [ persons, setPersons ] = useState( [
+  /*const [ persons, setPersons ] = useState( [
     { name: 'Arto Hellas', phone: '041 1234567' },
     { name: 'Fuad Kalhori', phone: '020 12121212' },
     { name: 'Matti Luukkanen', phone: '045 1235432' },
     { name: 'Ada Lovelace', number: '39-44-5323523' },
     { name: 'Dan Abramov', number: '12-43-234345' },
     { name: 'Mary Poppendieck', number: '39-23-6423122' },
-  ] );
+  ] );*/
 
+  const [persons, setPersons] = useState([])
   const [ newName, setNewName ] = useState( '' );
   const [ newPhone, setNewPhone ] = useState( '' );
 
   const [ nameFilter, setNameFilter ] = useState( '' );
   const [ showAll, setShowAll ] = useState( true );
+
+  useEffect(() => {
+    axios
+        .get('http://localhost:3001/persons')
+        .then(response => {
+          setPersons(response.data)
+    })
+  }, [])
 
   const personsToShow = showAll ? persons : persons.filter(person => person.name.includes(nameFilter));
 

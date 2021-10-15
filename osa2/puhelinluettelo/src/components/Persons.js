@@ -2,7 +2,7 @@ const Persons = ({persons}) => {
   return(
       <div className={'persons'}>
         { persons.map( person => <p
-            key={ person.name }>{ person.name } ({ person.phone })</p> ) }
+            key={ person.id}>{ person.name } ({ person.number })</p> ) }
       </div>
   )
 }
