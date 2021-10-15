@@ -1,18 +1,6 @@
 import React from 'react';
 import Course from './components/Course';
 
-const Total = props => {
-  const parts = props.parts;
-  let total = 0;
-  parts.forEach( part => total += part.exercises );
-
-  return (
-      <>
-        <p>Number of exercises { total }</p>
-      </>
-  );
-};
-
 const App = () => {
   const course = {
     name: 'Half Stack application development',
@@ -49,7 +37,3 @@ const App = () => {
 };
 
 export default App;
-
-/*
-* <Total parts={ course.parts }/>
-* */
