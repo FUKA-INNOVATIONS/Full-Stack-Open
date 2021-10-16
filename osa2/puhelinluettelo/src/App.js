@@ -69,6 +69,15 @@ const App = () => {
     }
   };
 
+  const handleDeletePerson = (personId) => {
+    let deleteConfirmed = window.confirm(`sure? ${personId}`);
+    if(deleteConfirmed) {
+      peopleService.deletePerson(personId)
+      setPersons(persons.filter(person => person.id !== personId))
+    }
+
+  }
+
   return (
       <div className={ 'main' }>
         <h2>Phonebook</h2>
@@ -82,7 +91,7 @@ const App = () => {
                     handlePhoneChange={ handlePhoneChange }/>
 
         <h3>Numbers</h3>
-        <Persons persons={ personsToShow }/>
+        <Persons persons={ personsToShow } handleDelete={handleDeletePerson}/>
       </div>
   );
 
