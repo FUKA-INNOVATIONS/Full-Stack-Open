@@ -1,49 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import Filter from './components/Filter'
+import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
-
-import axios from 'axios';
+import peopleService from './servieces/persons';
 
 const App = () => {
 
-  /*const [ persons, setPersons ] = useState( [
-    { name: 'Arto Hellas', phone: '041 1234567' },
-    { name: 'Fuad Kalhori', phone: '020 12121212' },
-    { name: 'Matti Luukkanen', phone: '045 1235432' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' },
-  ] );*/
-
-  const [persons, setPersons] = useState([])
+  const [ persons, setPersons ] = useState( [] );
   const [ newName, setNewName ] = useState( '' );
   const [ newPhone, setNewPhone ] = useState( '' );
 
   const [ nameFilter, setNameFilter ] = useState( '' );
   const [ showAll, setShowAll ] = useState( true );
 
-  useEffect(() => {
-    axios
-        .get('http://localhost:3001/persons')
-        .then(response => {
-          setPersons(response.data)
-    })
-  }, [])
+  useEffect( () => {
+    peopleService.getAll().then( response => {
+      setPersons( response );
+    } );
+  }, [] );
 
-  const personsToShow = showAll ? persons : persons.filter(person => person.name.includes(nameFilter));
+  const personsToShow = showAll ? persons : persons.filter(
+      person => person.name.includes( nameFilter ) );
 
   const handleNameFilterChange = e => {
 
     let filterTerm = e.target.value;
-    if ( filterTerm.length > 0)  {
-      setShowAll(false)
-    }else {
-      setShowAll(true)
+    if ( filterTerm.length > 0 ) {
+      setShowAll( false );
+    } else {
+      setShowAll( true );
     }
 
     setNameFilter( filterTerm );
-  }
+  };
 
   // Add name input value to newName state
   const handleNameChange = e => setNewName( e.target.value );
@@ -57,7 +46,7 @@ const App = () => {
 
     let personExists = false;
 
-    // Alert incase name already exists
+    // Check and alert incase name already exists
     persons.forEach( person => {
       if ( person.name.toLowerCase() === newName.toLocaleLowerCase() ) {
         personExists = true;
@@ -69,22 +58,31 @@ const App = () => {
     if ( !personExists ) {
       const newPerson = {
         name: newName,
-        phone: newPhone,
+        number: newPhone,
       };
-      setPersons( persons.concat( newPerson ) );
+      peopleService.create( newPerson ).
+          then( returnedPerson => {
+            setPersons( persons.concat( returnedPerson ) );
+            setNewName( '' );
+            setNewPhone( '' );
+          } );
     }
   };
 
   return (
-      <div className={'main'}>
+      <div className={ 'main' }>
         <h2>Phonebook</h2>
-        <Filter nameFilter={nameFilter} handleChange={handleNameFilterChange} />
+        <Filter nameFilter={ nameFilter }
+                handleChange={ handleNameFilterChange }/>
 
         <h3>Add a new</h3>
-        <PersonForm newName={newName} newPhone={newPhone} handleSubmit={handleAddPerson} handleNameChange={handleNameChange} handlePhoneChange={handlePhoneChange} />
+        <PersonForm newName={ newName } newPhone={ newPhone }
+                    handleSubmit={ handleAddPerson }
+                    handleNameChange={ handleNameChange }
+                    handlePhoneChange={ handlePhoneChange }/>
 
         <h3>Numbers</h3>
-        <Persons persons={personsToShow} />
+        <Persons persons={ personsToShow }/>
       </div>
   );
 
