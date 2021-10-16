@@ -50,7 +50,25 @@ const App = () => {
     persons.forEach( person => {
       if ( person.name.toLowerCase() === newName.toLocaleLowerCase() ) {
         personExists = true;
-        alert( `${ newName } is already added to  phonebook` );
+
+        // Update number if user entered new number
+        if ( newPhone.length !== 0 ) {
+          const updatedPerson = {
+            name: person.name,
+            number: newPhone,
+          };
+
+          let updateConfirmed = window.confirm(`${ person.name } is already added to phonebook, replace the old number with a new one?`)
+          if(updateConfirmed) {
+            peopleService.upadateNumber( person.id, updatedPerson );
+            setPersons( persons.filter( p => p.id !== person.id ).
+                concat( updatedPerson ) );
+            alert( `${ newName }'s phone number is updated!` );
+          }
+        } else {
+          alert(
+              `To update the number, Please write a new number` );
+        }
       }
     } );
 
@@ -69,14 +87,14 @@ const App = () => {
     }
   };
 
-  const handleDeletePerson = (personId) => {
-    let deleteConfirmed = window.confirm(`sure? ${personId}`);
-    if(deleteConfirmed) {
-      peopleService.deletePerson(personId)
-      setPersons(persons.filter(person => person.id !== personId))
+  const handleDeletePerson = ( personId ) => {
+    let deleteConfirmed = window.confirm( `sure? ${ personId }` );
+    if ( deleteConfirmed ) {
+      peopleService.deletePerson( personId );
+      setPersons( persons.filter( person => person.id !== personId ) );
     }
 
-  }
+  };
 
   return (
       <div className={ 'main' }>
@@ -91,7 +109,7 @@ const App = () => {
                     handlePhoneChange={ handlePhoneChange }/>
 
         <h3>Numbers</h3>
-        <Persons persons={ personsToShow } handleDelete={handleDeletePerson}/>
+        <Persons persons={ personsToShow } handleDelete={ handleDeletePerson }/>
       </div>
   );
 

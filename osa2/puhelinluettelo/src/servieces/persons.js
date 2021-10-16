@@ -13,9 +13,14 @@ const create = newPerson => {
 
 const deletePerson = personId => {
   const request = axios.delete(`${baseUrl}/${personId}`)
-      .catch(err => {
-        return err
-  })
+      .catch(err => err)
 }
 
-export default { getAll, create, deletePerson };
+const upadateNumber = (id, updatedPerson) => {
+  const request = axios
+      .put(`${baseUrl}/${id}`, updatedPerson)
+      .then(response => response.data)
+      .catch(err => err)
+}
+
+export default { getAll, create, deletePerson, upadateNumber };
