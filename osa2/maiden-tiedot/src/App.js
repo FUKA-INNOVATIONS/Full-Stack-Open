@@ -7,10 +7,12 @@ function App() {
 
   const handleInputChange = e => setSearchTerm( e.target.value );
 
+
+
   useEffect( () => {
     if ( searchTerm.length > 0 ) {
-      axios.get( `https://restcountries.com/v3.1/name/${ searchTerm }` ).
-          then( response => {
+      axios.get( `https://restcountries.com/v3.1/name/${ searchTerm }` )
+      .then( response => {
             setSearchResult( response.data );
           } );
     }
@@ -43,7 +45,7 @@ function App() {
     } else if ( searchResult.length <= 10 ) {
       return (
           searchResult.map(
-              country => <p key={ country.cca2 }>{ country.name.common }</p> )
+              country => <p key={ country.cca2 }>{ country.name.common } <button onClick={ (e) => setSearchTerm(country.name.common)}>Show</button></p> )
       );
     } else {
       return <p>Too many matches, specify another filter</p>;
