@@ -3,6 +3,10 @@ import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import peopleService from './servieces/persons';
+import {
+  SuccessNotification,
+  ErrorNotification,
+} from './components/Notification';
 
 const App = () => {
 
@@ -12,6 +16,18 @@ const App = () => {
 
   const [ nameFilter, setNameFilter ] = useState( '' );
   const [ showAll, setShowAll ] = useState( true );
+
+  const [ successMessage, setSuccessMessage ] = useState( null );
+  const [ errorMessage, setErrorMessage ] = useState( null );
+
+  const showMessage = ( newMessage, type ) => {
+    type === 'success' ? setSuccessMessage( newMessage ) : setErrorMessage(
+        newMessage );
+    setTimeout( () => {
+      setErrorMessage( null );
+      setSuccessMessage( null );
+    }, 5000 );
+  };
 
   useEffect( () => {
     peopleService.getAll().then( response => {
@@ -58,12 +74,14 @@ const App = () => {
             number: newPhone,
           };
 
-          let updateConfirmed = window.confirm(`${ person.name } is already added to phonebook, replace the old number with a new one?`)
-          if(updateConfirmed) {
+          let updateConfirmed = window.confirm(
+              `${ person.name } is already added to phonebook, replace the old number with a new one?` );
+          if ( updateConfirmed ) {
             peopleService.upadateNumber( person.id, updatedPerson );
             setPersons( persons.filter( p => p.id !== person.id ).
                 concat( updatedPerson ) );
-            alert( `${ newName }'s phone number is updated!` );
+
+            showMessage( `${ newName }'s phone number is updated!`, 'success' );
           }
         } else {
           alert(
@@ -84,20 +102,42 @@ const App = () => {
             setNewName( '' );
             setNewPhone( '' );
           } );
+
+      showMessage( `${ newName }'s phone number is added!`, 'success' );
     }
   };
 
-  const handleDeletePerson = ( personId ) => {
-    let deleteConfirmed = window.confirm( `sure? ${ personId }` );
+  const handleDeletePerson = ( personId, personName ) => {
+    let deleteConfirmed = window.confirm(
+        `Are you sure to delete ${ personName }?` );
     if ( deleteConfirmed ) {
-      peopleService.deletePerson( personId );
-      setPersons( persons.filter( person => person.id !== personId ) );
+      peopleService.deletePerson( personId )
+      .then(response => {
+        //setPersons( persons.filter( person => person.id !== personId ) );
+        peopleService.getAll().then( response => {
+          setPersons( response );
+        } );
+        showMessage( 'Number successfully deleted', 'success' )
+      })
+      .catch( e => {
+            showMessage( `Information of ${ personName } has already been removed.`, 'error')
+        setTimeout(() => {
+          peopleService.getAll().then( response => {
+            setPersons( response );
+          }, 2000 );
+        })
+          })
     }
 
   };
+
+  const notificationContent = successMessage
+      ? <SuccessNotification message={successMessage} />
+      : <ErrorNotification message={errorMessage} />
 
   return (
       <div className={ 'main' }>
+        { notificationContent }
         <h2>Phonebook</h2>
         <Filter nameFilter={ nameFilter }
                 handleChange={ handleNameFilterChange }/>

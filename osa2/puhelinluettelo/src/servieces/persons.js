@@ -8,12 +8,13 @@ const getAll = () => {
 
 const create = newPerson => {
   const request = axios.post( baseUrl, newPerson );
+  console.log(request.then(request.data))
   return request.then( response => response.data );
 };
 
 const deletePerson = personId => {
   const request = axios.delete(`${baseUrl}/${personId}`)
-      .catch(err => err)
+  return request
 }
 
 const upadateNumber = (id, updatedPerson) => {

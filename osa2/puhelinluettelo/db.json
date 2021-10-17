@@ -1,24 +1,14 @@
 {
   "persons": [
     {
-      "name": "Ada Lovelace",
-      "number": "1111",
+      "name": "Matti",
+      "number": "7898778987",
       "id": 2
     },
     {
-      "name": "Dan Abramov",
-      "number": "12-43-234345",
+      "name": "Fuad",
+      "number": "045 123",
       "id": 3
-    },
-    {
-      "name": "Mary Poppendieck",
-      "number": "555",
-      "id": 4
-    },
-    {
-      "name": "Fuad Kalhori",
-      "number": "44",
-      "id": 5
     }
   ]
 }
